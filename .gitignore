@@ -1,0 +1,10 @@
+# Ignore environment/config secrets
+.env
+.env.*
+*.env
+backend/tasknest/.env*
+frontend/.env*
+
+# Node build outputs
+frontend/node_modules/
+frontend/dist/
