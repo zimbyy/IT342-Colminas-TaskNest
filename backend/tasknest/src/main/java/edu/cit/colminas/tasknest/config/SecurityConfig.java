@@ -22,10 +22,17 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/h2-console/**", "/*.html", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/api/auth/**", "/*.html", "/css/**", "/js/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+            .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+            .cors(cors -> cors.configurationSource(request -> {
+                var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                corsConfig.setAllowedOrigins(java.util.List.of("http://localhost:5173"));
+                corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                corsConfig.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type"));
+                return corsConfig;
+            }));
         
         return http.build();
     }
