@@ -48,15 +48,22 @@ public class AuthService {
     }
     
     public AuthResponse login(LoginRequest request) {
+        System.out.println("Attempting login for username: " + request.getUsername());
+
         // Find user by username
         User user = userRepository.findByUsername(request.getUsername())
-            .orElseThrow(() -> new RuntimeException("Invalid username or password"));
-        
+            .orElseThrow(() -> {
+                System.err.println("User not found: " + request.getUsername());
+                return new RuntimeException("Invalid username or password");
+            });
+
         // Verify password
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            System.err.println("Password mismatch for username: " + request.getUsername());
             throw new RuntimeException("Invalid username or password");
         }
-        
+
+        System.out.println("Login successful for username: " + request.getUsername());
         return new AuthResponse(
             "Login successful",
             user.getId(),
