@@ -1,34 +1,46 @@
 package edu.cit.colminas.tasknest.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import edu.cit.colminas.tasknest.factory.TaskFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import edu.cit.colminas.tasknest.model.Task;
-import edu.cit.colminas.tasknest.service.NotificationService;
 import edu.cit.colminas.tasknest.service.TaskService;
-import edu.cit.colminas.tasknest.strategy.TaskSortingStrategy;
+import lombok.RequiredArgsConstructor;
 
+@RestController
+@RequestMapping("/api/tasks")
+@RequiredArgsConstructor
 public class TaskController {
-    private final TaskService taskService = new TaskService();
-    private final NotificationService notificationService = new NotificationService(taskService.getDeadlineNotifier());
 
-    public void createTask(String title, LocalDateTime deadline) {
-        Task task = TaskFactory.createTask(title, deadline);
-        taskService.addTask(task);
+    private final TaskService taskService;
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Task>> getTasks(@PathVariable Long userId) {
+        return ResponseEntity.ok(taskService.getTasksByUserId(userId));
     }
 
-    public List<Task> getTasks() {
-        return taskService.getAllTasks();
+    @PostMapping("/user/{userId}")
+    public ResponseEntity<Task> createTask(@PathVariable Long userId, @RequestBody Task task) {
+        return ResponseEntity.ok(taskService.createTask(userId, task));
     }
 
-    public void checkDeadlines() {
-        taskService.checkDeadlines();
+    @PutMapping("/{taskId}")
+    public ResponseEntity<Task> updateTask(@PathVariable Long taskId, @RequestBody Task task) {
+        return ResponseEntity.ok(taskService.updateTask(taskId, task));
     }
 
-    public List<Task> getSortedTasks(TaskSortingStrategy strategy) {
-        List<Task> tasks = taskService.getAllTasks();
-        strategy.sort(tasks);
-        return tasks;
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+        taskService.deleteTask(taskId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -22,4 +22,24 @@ public class RegisterRequest {
 
     @NotBlank(message = "Confirm password is required")
     private String confirmPassword;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
 }
