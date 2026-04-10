@@ -1,27 +1,15 @@
 package edu.cit.colminas.tasknest.repository;
 
-import edu.cit.colminas.tasknest.model.Task;
-import java.util.ArrayList;
 import java.util.List;
 
-public class TaskRepository {
-    private static TaskRepository instance;
-    private final List<Task> tasks = new ArrayList<>();
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-    private TaskRepository() {}
+import edu.cit.colminas.tasknest.model.Task;
 
-    public static TaskRepository getInstance() {
-        if (instance == null) {
-            instance = new TaskRepository();
-        }
-        return instance;
-    }
-
-    public void save(Task task) {
-        tasks.add(task);
-    }
-
-    public List<Task> findAll() {
-        return tasks;
-    }
+@Repository
+public interface TaskRepository extends JpaRepository<Task, Long> {
+    List<Task> findByUserId(Long userId);
+    List<Task> findByUserIdOrderByDeadlineAsc(Long userId);
+    List<Task> findByUserIdAndIsCompletedOrderByDeadlineAsc(Long userId, Boolean isCompleted);
 }
