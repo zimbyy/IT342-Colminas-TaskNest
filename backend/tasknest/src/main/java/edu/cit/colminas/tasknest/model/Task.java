@@ -2,6 +2,8 @@ package edu.cit.colminas.tasknest.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,6 +26,7 @@ public class Task {
     private LocalDateTime deadline;
     private String status = "pending";
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private edu.cit.colminas.tasknest.model.User user;

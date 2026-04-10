@@ -1,6 +1,7 @@
 package edu.cit.colminas.tasknest.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,11 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
-    public List<Task> getTasksByUserId(Long userId) {
+    public List<Task> getTasksByUserId(UUID userId) {
         return taskRepository.findByUserId(userId);
     }
 
-    public Task createTask(Long userId, Task task) {
+    public Task createTask(UUID userId, Task task) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
         task.setUser(user);

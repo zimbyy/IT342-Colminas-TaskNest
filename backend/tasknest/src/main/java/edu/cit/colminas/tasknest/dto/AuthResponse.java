@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class AuthResponse {
     private String message;
-    private Long userId;
     private String username;
     private String firstName;
     private String lastName;
+    private Long userId;
 
     public AuthResponse(String message, Long userId, String username, String firstName, String lastName) {
         this.message = message;

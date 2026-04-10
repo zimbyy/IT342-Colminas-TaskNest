@@ -1,6 +1,7 @@
 package edu.cit.colminas.tasknest.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,12 +25,12 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> getTasks(@PathVariable Long userId) {
+    public ResponseEntity<List<Task>> getTasks(@PathVariable UUID userId) {
         return ResponseEntity.ok(taskService.getTasksByUserId(userId));
     }
 
     @PostMapping("/user/{userId}")
-    public ResponseEntity<Task> createTask(@PathVariable Long userId, @RequestBody Task task) {
+    public ResponseEntity<Task> createTask(@PathVariable UUID userId, @RequestBody Task task) {
         return ResponseEntity.ok(taskService.createTask(userId, task));
     }
 

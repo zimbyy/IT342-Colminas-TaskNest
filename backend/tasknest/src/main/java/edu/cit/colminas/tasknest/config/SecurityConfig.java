@@ -39,9 +39,10 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/**", "/api/tasks/**").permitAll()
-            .anyRequest().authenticated()
+                .anyRequest().permitAll()
             );
         return http.build();
     }
