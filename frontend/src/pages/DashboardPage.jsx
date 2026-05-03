@@ -12,21 +12,7 @@ function DashboardPage() {
 
   const user = useMemo(() => {
     const raw = localStorage.getItem("tasknestUser");
-    if (!raw) return null;
-    
-    const parsed = JSON.parse(raw);
-    console.log("User data from localStorage:", parsed);
-    console.log("User ID type:", typeof parsed.userId);
-    console.log("User ID value:", parsed.userId);
-    
-    // Validate that userId exists and is a valid number
-    if (!parsed.userId || parsed.userId === "3") {
-      console.warn("Invalid or hardcoded userId detected, clearing localStorage");
-      localStorage.removeItem("tasknestUser");
-      return null;
-    }
-    
-    return parsed;
+    return raw ? JSON.parse(raw) : null;
   }, []);
 
   useEffect(() => {
@@ -34,7 +20,7 @@ function DashboardPage() {
       navigate("/login", { replace: true });
       return;
     }
-    fetchTasks(user.userId).then(setTasks).catch(console.error);
+    fetchTasks(user.userId).then(setTasks);
   }, [user, navigate]);
 
   function handleTaskCreated(newTask) {
@@ -72,8 +58,7 @@ function DashboardPage() {
       localStorage.removeItem("tasknestUser");
       navigate("/login");
     } catch (error) {
-      console.error("Logout failed:", error);
-      // Still clear local storage and navigate even if API call fails
+            // Still clear local storage and navigate even if API call fails
       localStorage.removeItem("tasknestUser");
       navigate("/login");
     }

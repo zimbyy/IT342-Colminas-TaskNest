@@ -41,7 +41,6 @@ export async function loginUser(payload) {
 }
 
 export async function fetchTasks(userId) {
-  console.log("Fetching tasks for userId:", userId, "type:", typeof userId);
   const response = await fetch(`${TASK_URL}/user/${userId}`, {
     headers: authHeaders(),
   });
@@ -51,15 +50,12 @@ export async function fetchTasks(userId) {
 }
 
 export async function createTask(userId, task) {
-  console.log("Creating task for user:", userId, "with payload:", task);
   const response = await fetch(`${TASK_URL}/user/${userId}`, {
     method: "POST",
     headers: authHeaders(),
     body: JSON.stringify(task),
   });
-  console.log("Response status:", response.status);
   const errorText = await response.text();
-  console.log("Response body:", errorText);
   if (!response.ok) {
     try {
       const errorData = JSON.parse(errorText);

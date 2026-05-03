@@ -19,7 +19,7 @@ function Notifications() {
       setNotifications(data.notifications || []);
       setUnreadCount(data.unreadCount || 0);
     } catch (error) {
-      console.error("Failed to fetch notifications:", error);
+      // Failed to fetch notifications
     }
   }
 
@@ -28,7 +28,7 @@ function Notifications() {
       await markNotificationAsRead(notificationId);
       fetchNotifications();
     } catch (error) {
-      console.error("Failed to mark notification as read:", error);
+      // Failed to mark notification as read
     }
   }
 
@@ -37,7 +37,7 @@ function Notifications() {
       await markAllNotificationsAsRead();
       fetchNotifications();
     } catch (error) {
-      console.error("Failed to mark all notifications as read:", error);
+      // Failed to mark all notifications as read
     }
   }
 
