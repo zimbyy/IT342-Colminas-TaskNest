@@ -9,12 +9,14 @@ public class AuthResponse {
     private String firstName;
     private String lastName;
     private Long userId;
+    private String token;
 
-    public AuthResponse(String message, Long userId, String username, String firstName, String lastName) {
+    public AuthResponse(String message, Long userId, String username, String firstName, String lastName, String token) {
         this.message = message;
         this.userId = userId;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.token = token;
     }
 }

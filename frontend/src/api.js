@@ -19,8 +19,8 @@ export async function registerUser(payload) {
     body: JSON.stringify(payload),
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Registration failed");
-  return data;
+  if (!response.ok) throw new Error(data.error?.message || "Registration failed");
+  return data.data; // Extract data from ApiResponse
 }
 
 export async function loginUser(payload) {
@@ -36,8 +36,8 @@ export async function loginUser(payload) {
   } catch (e) {
     throw new Error("Invalid JSON response from server");
   }
-  if (!response.ok) throw new Error(data.error || "Login failed");
-  return data;
+  if (!response.ok) throw new Error(data.error?.message || "Login failed");
+  return data.data; // Extract data from ApiResponse
 }
 
 export async function fetchTasks(userId) {
@@ -45,7 +45,8 @@ export async function fetchTasks(userId) {
     headers: authHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch tasks");
-  return response.json();
+  const data = await response.json();
+  return data.data; // Extract data from ApiResponse
 }
 
 export async function createTask(userId, task) {
@@ -55,7 +56,8 @@ export async function createTask(userId, task) {
     body: JSON.stringify(task),
   });
   if (!response.ok) throw new Error("Failed to create task");
-  return response.json();
+  const data = await response.json();
+  return data.data; // Extract data from ApiResponse
 }
 
 export async function deleteTask(taskId) {
@@ -64,6 +66,8 @@ export async function deleteTask(taskId) {
     headers: authHeaders(),
   });
   if (!response.ok) throw new Error("Failed to delete task");
+  const data = await response.json();
+  return data.data; // Extract data from ApiResponse
 }
 
 export async function updateTask(taskId, task) {
@@ -73,5 +77,77 @@ export async function updateTask(taskId, task) {
     body: JSON.stringify(task),
   });
   if (!response.ok) throw new Error("Failed to update task");
-  return response.json();
+  const data = await response.json();
+  return data.data; // Extract data from ApiResponse
+}
+
+// Add new API functions for profile and notifications
+export async function getProfile() {
+  const response = await fetch("/api/profile", {
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error("Failed to fetch profile");
+  const data = await response.json();
+  return data.data;
+}
+
+export async function updateProfile(profileData) {
+  const response = await fetch("/api/profile", {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify(profileData),
+  });
+  if (!response.ok) throw new Error("Failed to update profile");
+  const data = await response.json();
+  return data.data;
+}
+
+export async function changePassword(passwordData) {
+  const response = await fetch("/api/profile/password", {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify(passwordData),
+  });
+  if (!response.ok) throw new Error("Failed to change password");
+  const data = await response.json();
+  return data.data;
+}
+
+export async function getNotifications() {
+  const response = await fetch("/api/notifications", {
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error("Failed to fetch notifications");
+  const data = await response.json();
+  return data.data;
+}
+
+export async function markNotificationAsRead(notificationId) {
+  const response = await fetch(`/api/notifications/read/${notificationId}`, {
+    method: "PUT",
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error("Failed to mark notification as read");
+  const data = await response.json();
+  return data.data;
+}
+
+export async function markAllNotificationsAsRead() {
+  const response = await fetch("/api/notifications/read-all", {
+    method: "PUT",
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error("Failed to mark all notifications as read");
+  const data = await response.json();
+  return data.data;
+}
+
+export async function logout() {
+  const response = await fetch("/api/auth/logout", {
+    method: "POST",
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error("Failed to logout");
+  const data = await response.json();
+  return data.data;
 }

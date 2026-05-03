@@ -1,6 +1,7 @@
 package edu.cit.colminas.tasknest.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +28,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -48,6 +52,7 @@ public class User {
     public String getUsername() { return username; }
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }
+    public String getEmail() { return email; }
     public String getPassword() { return password; }
     public void setUsername(String username) { this.username = username; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
