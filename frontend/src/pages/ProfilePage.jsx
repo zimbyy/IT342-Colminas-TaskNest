@@ -34,8 +34,7 @@ function ProfilePage() {
       });
     } catch (err) {
       setError("Failed to fetch profile");
-      console.error(err);
-    } finally {
+          } finally {
       setLoading(false);
     }
   }

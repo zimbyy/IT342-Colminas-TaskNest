@@ -19,8 +19,7 @@ function LoginPage() {
 
     try {
       const data = await loginUser(form);
-      console.log("Login response:", data);
-      localStorage.setItem("tasknestUser", JSON.stringify(data));
+            localStorage.setItem("tasknestUser", JSON.stringify(data));
       setMessage(`${data.message}. Redirecting to dashboard...`);
       setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
