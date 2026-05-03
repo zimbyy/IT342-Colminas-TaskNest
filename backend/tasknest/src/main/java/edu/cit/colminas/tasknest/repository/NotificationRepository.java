@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import edu.cit.colminas.tasknest.model.Notification;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, String> {
     
-    List<Notification> findByUserIdOrderByCreatedAtDesc(Long userId);
+    List<Notification> findByUserIdOrderByCreatedAtDesc(String userId);
     
-    List<Notification> findByUserIdAndReadFalseOrderByCreatedAtDesc(Long userId);
+    List<Notification> findByUserIdAndReadFalseOrderByCreatedAtDesc(String userId);
 }

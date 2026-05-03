@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import edu.cit.colminas.tasknest.model.Task;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Long> {
+public interface TaskRepository extends JpaRepository<Task, String> {
     List<Task> findByUserId(Long userId);
     List<Task> findByStatusNot(String status);
 }

@@ -9,13 +9,15 @@ function TaskForm({ userId, onTaskCreated }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const taskPayload = {
+      title,
+      description,
+      deadline: deadline ? new Date(deadline).toISOString().slice(0, 19) : null,
+      status: "pending",
+    };
+    console.log("Task payload being sent:", taskPayload);
     try {
-      const newTask = await createTask(userId, {
-        title,
-        description,
-        deadline: deadline ? deadline + ":00" : null,
-        status: "pending",
-      });
+      const newTask = await createTask(userId, taskPayload);
       onTaskCreated(newTask);
       setTitle("");
       setDescription("");

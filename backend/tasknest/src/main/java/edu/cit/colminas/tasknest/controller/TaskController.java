@@ -45,7 +45,7 @@ public class TaskController {
     }
 
     @PutMapping("/{taskId}")
-    public ResponseEntity<ApiResponse<Task>> updateTask(@PathVariable Long taskId, @RequestBody Task task) {
+    public ResponseEntity<ApiResponse<Task>> updateTask(@PathVariable String taskId, @RequestBody Task task) {
         try {
             Task updatedTask = taskService.updateTaskWithStatusCheck(taskId, task);
             return ResponseEntity.ok(ApiResponse.success(updatedTask));
@@ -55,7 +55,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<ApiResponse<Void>> deleteTask(@PathVariable Long taskId) {
+    public ResponseEntity<ApiResponse<Void>> deleteTask(@PathVariable String taskId) {
         try {
             taskService.deleteTask(taskId);
             return ResponseEntity.ok(ApiResponse.success("Task deleted successfully", null));

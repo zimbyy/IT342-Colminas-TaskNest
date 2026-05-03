@@ -12,7 +12,21 @@ function DashboardPage() {
 
   const user = useMemo(() => {
     const raw = localStorage.getItem("tasknestUser");
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    
+    const parsed = JSON.parse(raw);
+    console.log("User data from localStorage:", parsed);
+    console.log("User ID type:", typeof parsed.userId);
+    console.log("User ID value:", parsed.userId);
+    
+    // Validate that userId exists and is a valid number
+    if (!parsed.userId || parsed.userId === "3") {
+      console.warn("Invalid or hardcoded userId detected, clearing localStorage");
+      localStorage.removeItem("tasknestUser");
+      return null;
+    }
+    
+    return parsed;
   }, []);
 
   useEffect(() => {

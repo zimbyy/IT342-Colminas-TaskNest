@@ -38,7 +38,7 @@ public class NotificationSchedulerService {
                 // Check if we haven't already sent a reminder for this task
                 if (!hasRecentReminder(task, "DEADLINE_REMINDER")) {
                     notificationService.notifyDeadlineApproaching(
-                        task.getUser().getId(), 
+                        String.valueOf(task.getUser().getId()), 
                         task.getTitle(), 
                         deadline
                     );
@@ -53,7 +53,7 @@ public class NotificationSchedulerService {
                 taskRepository.save(task);
                 
                 // Send overdue notification
-                notificationService.notifyTaskOverdue(task.getUser().getId(), task.getTitle());
+                notificationService.notifyTaskOverdue(String.valueOf(task.getUser().getId()), task.getTitle());
                 log.info("Marked task as overdue and sent notification: {}", task.getTitle());
             }
         }
@@ -66,7 +66,7 @@ public class NotificationSchedulerService {
         // of this type for this task's user
         try {
             List<edu.cit.colminas.tasknest.model.Notification> recentNotifications = 
-                notificationService.getUnreadNotifications(task.getUser().getId());
+                notificationService.getUnreadNotifications(String.valueOf(task.getUser().getId()));
             
             return recentNotifications.stream()
                 .anyMatch(n -> n.getType().equals(notificationType) && 

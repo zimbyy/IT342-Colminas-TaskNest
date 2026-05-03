@@ -39,11 +39,11 @@ public class NotificationController {
             var user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
             
-            List<Notification> notifications = notificationService.getUserNotifications(user.getId());
+            List<Notification> notifications = notificationService.getUserNotifications(String.valueOf(user.getId()));
             
             Map<String, Object> response = new HashMap<>();
             response.put("notifications", notifications);
-            response.put("unreadCount", notificationService.getUnreadNotifications(user.getId()).size());
+            response.put("unreadCount", notificationService.getUnreadNotifications(String.valueOf(user.getId())).size());
             
             return ResponseEntity.ok(ApiResponse.success(response));
         } catch (RuntimeException e) {
@@ -57,7 +57,7 @@ public class NotificationController {
             var user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
             
-            List<Notification> notifications = notificationService.getUnreadNotifications(user.getId());
+            List<Notification> notifications = notificationService.getUnreadNotifications(String.valueOf(user.getId()));
             
             return ResponseEntity.ok(ApiResponse.success(notifications));
         } catch (RuntimeException e) {
@@ -76,7 +76,7 @@ public class NotificationController {
             String message = request.getMessage();
             String type = request.getType();
             
-            Notification notification = notificationService.createNotification(user.getId(), message, type);
+            Notification notification = notificationService.createNotification(String.valueOf(user.getId()), message, type);
             
             return ResponseEntity.ok(ApiResponse.success(notification));
         } catch (RuntimeException e) {
@@ -85,7 +85,7 @@ public class NotificationController {
     }
     
     @PutMapping("/read/{notificationId}")
-    public ResponseEntity<ApiResponse<String>> markAsRead(@PathVariable Long notificationId) {
+    public ResponseEntity<ApiResponse<String>> markAsRead(@PathVariable String notificationId) {
         try {
             notificationService.markAsRead(notificationId);
             return ResponseEntity.ok(ApiResponse.success("Notification marked as read"));
@@ -100,7 +100,7 @@ public class NotificationController {
             var user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
             
-            notificationService.markAllAsRead(user.getId());
+            notificationService.markAllAsRead(String.valueOf(user.getId()));
             return ResponseEntity.ok(ApiResponse.success("All notifications marked as read"));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
