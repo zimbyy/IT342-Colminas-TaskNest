@@ -1,7 +1,6 @@
 package edu.cit.colminas.tasknest.model;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

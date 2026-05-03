@@ -1,10 +1,9 @@
 package edu.cit.colminas.tasknest.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -20,10 +19,9 @@ import lombok.NoArgsConstructor;
 public class Notification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    private Long userId;
+    private String userId;
     private String message;
     private String type; // DEADLINE_REMINDER, TASK_OVERDUE, etc.
     private LocalDateTime createdAt;
@@ -31,10 +29,13 @@ public class Notification {
 
     @PrePersist
     protected void onCreate() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
         createdAt = LocalDateTime.now();
     }
 
-    public Notification(Long userId, String message, String type) {
+    public Notification(String userId, String message, String type) {
         this.userId = userId;
         this.message = message;
         this.type = type;

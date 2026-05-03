@@ -29,7 +29,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task updateTask(Long taskId, Task updated) {
+    public Task updateTask(String taskId, Task updated) {
         Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new RuntimeException("Task not found"));
         task.setTitle(updated.getTitle());
@@ -39,7 +39,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public void deleteTask(Long taskId) {
+    public void deleteTask(String taskId) {
         taskRepository.deleteById(taskId);
     }
     
@@ -59,7 +59,7 @@ public class TaskService {
         return tasks;
     }
     
-    public Task updateTaskWithStatusCheck(Long taskId, Task updated) {
+    public Task updateTaskWithStatusCheck(String taskId, Task updated) {
         Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new RuntimeException("Task not found"));
         

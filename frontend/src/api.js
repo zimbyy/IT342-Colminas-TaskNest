@@ -41,6 +41,7 @@ export async function loginUser(payload) {
 }
 
 export async function fetchTasks(userId) {
+  console.log("Fetching tasks for userId:", userId, "type:", typeof userId);
   const response = await fetch(`${TASK_URL}/user/${userId}`, {
     headers: authHeaders(),
   });
@@ -50,13 +51,24 @@ export async function fetchTasks(userId) {
 }
 
 export async function createTask(userId, task) {
+  console.log("Creating task for user:", userId, "with payload:", task);
   const response = await fetch(`${TASK_URL}/user/${userId}`, {
     method: "POST",
     headers: authHeaders(),
     body: JSON.stringify(task),
   });
-  if (!response.ok) throw new Error("Failed to create task");
-  const data = await response.json();
+  console.log("Response status:", response.status);
+  const errorText = await response.text();
+  console.log("Response body:", errorText);
+  if (!response.ok) {
+    try {
+      const errorData = JSON.parse(errorText);
+      throw new Error(errorData.error?.message || "Failed to create task");
+    } catch (e) {
+      throw new Error(`Failed to create task: ${errorText}`);
+    }
+  }
+  const data = JSON.parse(errorText);
   return data.data; // Extract data from ApiResponse
 }
 
