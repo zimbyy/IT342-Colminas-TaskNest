@@ -1,7 +1,6 @@
 package edu.cit.colminas.tasknest.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.cit.colminas.tasknest.dto.ApiResponse;
 import edu.cit.colminas.tasknest.model.Task;
 import edu.cit.colminas.tasknest.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -25,23 +25,42 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> getTasks(@PathVariable UUID userId) {
-        return ResponseEntity.ok(taskService.getTasksByUserId(userId));
+    public ResponseEntity<ApiResponse<List<Task>>> getTasks(@PathVariable Long userId) {
+        try {
+            List<Task> tasks = taskService.getTasksByUserIdWithStatus(userId);
+            return ResponseEntity.ok(ApiResponse.success(tasks));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @PostMapping("/user/{userId}")
-    public ResponseEntity<Task> createTask(@PathVariable UUID userId, @RequestBody Task task) {
-        return ResponseEntity.ok(taskService.createTask(userId, task));
+    public ResponseEntity<ApiResponse<Task>> createTask(@PathVariable Long userId, @RequestBody Task task) {
+        try {
+            Task createdTask = taskService.createTask(userId, task);
+            return ResponseEntity.ok(ApiResponse.success(createdTask));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @PutMapping("/{taskId}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long taskId, @RequestBody Task task) {
-        return ResponseEntity.ok(taskService.updateTask(taskId, task));
+    public ResponseEntity<ApiResponse<Task>> updateTask(@PathVariable Long taskId, @RequestBody Task task) {
+        try {
+            Task updatedTask = taskService.updateTaskWithStatusCheck(taskId, task);
+            return ResponseEntity.ok(ApiResponse.success(updatedTask));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
-        taskService.deleteTask(taskId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponse<Void>> deleteTask(@PathVariable Long taskId) {
+        try {
+            taskService.deleteTask(taskId);
+            return ResponseEntity.ok(ApiResponse.success("Task deleted successfully", null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
     }
 }

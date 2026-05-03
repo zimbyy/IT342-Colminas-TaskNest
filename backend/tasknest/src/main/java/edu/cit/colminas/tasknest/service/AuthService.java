@@ -8,6 +8,7 @@ import edu.cit.colminas.tasknest.dto.LoginRequest;
 import edu.cit.colminas.tasknest.dto.RegisterRequest;
 import edu.cit.colminas.tasknest.model.User;
 import edu.cit.colminas.tasknest.repository.UserRepository;
+import edu.cit.colminas.tasknest.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -16,11 +17,17 @@ public class AuthService {
     
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
     
     public AuthResponse register(RegisterRequest request) {
         // Check if username already exists
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already registered");
+        }
+
+        // Check if email already exists
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already registered");
         }
 
         // Confirm password should match password
@@ -31,6 +38,7 @@ public class AuthService {
         // Create new user
         User user = new User();
         user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -38,12 +46,16 @@ public class AuthService {
         // Save to database
         User savedUser = userRepository.save(user);
         
+        // Generate JWT token
+        String token = jwtUtil.generateToken(savedUser.getId(), savedUser.getUsername());
+        
         return new AuthResponse(
             "Registration successful",
             savedUser.getId(),
             savedUser.getUsername(),
             savedUser.getFirstName(),
-            savedUser.getLastName()
+            savedUser.getLastName(),
+            token
         );
     }
     
@@ -64,12 +76,17 @@ public class AuthService {
         }
 
         System.out.println("Login successful for username: " + request.getUsername());
+        
+        // Generate JWT token
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+        
         return new AuthResponse(
             "Login successful",
             user.getId(),
             user.getUsername(),
             user.getFirstName(),
-            user.getLastName()
+            user.getLastName(),
+            token
         );
     }
 }

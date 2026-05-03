@@ -4,7 +4,7 @@ import { registerUser } from "../api";
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ username: "", firstName: "", lastName: "", password: "", confirmPassword: "" });
+  const [form, setForm] = useState({ username: "", email: "", firstName: "", lastName: "", password: "", confirmPassword: "" });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -25,7 +25,7 @@ function RegisterPage() {
     try {
       const data = await registerUser(form);
       setMessage(`${data.message}. Welcome ${data.username}! Redirecting to login...`);
-      setForm({ username: "", firstName: "", lastName: "", password: "", confirmPassword: "" });
+      setForm({ username: "", email: "", firstName: "", lastName: "", password: "", confirmPassword: "" });
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       setError(err.message);
@@ -48,6 +48,11 @@ function RegisterPage() {
           </div>
 
           <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input id="email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Enter your email" />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="firstName">First Name</label>
             <input id="firstName" name="firstName" value={form.firstName} onChange={handleChange} required placeholder="Enter your first name" />
           </div>
@@ -59,12 +64,12 @@ function RegisterPage() {
 
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" value={form.password} onChange={handleChange} required minLength={6} placeholder="Minimum 6 characters" />
+            <input id="password" name="password" type="password" value={form.password} onChange={handleChange} required minLength={8} placeholder="Minimum 8 characters" />
           </div>
 
           <div className="form-group">
             <label htmlFor="confirmPassword">Confirm Password</label>
-            <input id="confirmPassword" name="confirmPassword" type="password" value={form.confirmPassword} onChange={handleChange} required minLength={6} placeholder="Confirm your password" />
+            <input id="confirmPassword" name="confirmPassword" type="password" value={form.confirmPassword} onChange={handleChange} required minLength={8} placeholder="Confirm your password" />
           </div>
 
           <button type="submit">Register</button>
