@@ -20,7 +20,28 @@ export async function registerUser(payload) {
   });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error?.message || "Registration failed");
-  return data.data; // Extract data from ApiResponse
+  
+  // Extract data from ApiResponse
+  const userData = data.data;
+  
+  // Only send chrome message when actually running inside the extension
+  // chrome.runtime.id is only defined when running AS the extension, not as a webpage
+  if (typeof chrome !== 'undefined' && 
+      chrome.runtime && 
+      chrome.runtime.id && 
+      typeof chrome.runtime.sendMessage === 'function') {
+    try {
+      chrome.runtime.sendMessage(chrome.runtime.id, {
+        type: 'REGISTRATION_COMPLETE',
+        data: userData
+      });
+      console.log('Chrome extension notified of registration');
+    } catch (error) {
+      console.warn('Chrome extension messaging skipped:', error.message);
+    }
+  }
+  
+  return userData;
 }
 
 export async function loginUser(payload) {
@@ -37,7 +58,7 @@ export async function loginUser(payload) {
     throw new Error("Invalid JSON response from server");
   }
   if (!response.ok) throw new Error(data.error?.message || "Login failed");
-  return data.data; // Extract data from ApiResponse
+  return data.data;
 }
 
 export async function fetchTasks(userId) {
@@ -46,7 +67,7 @@ export async function fetchTasks(userId) {
   });
   if (!response.ok) throw new Error("Failed to fetch tasks");
   const data = await response.json();
-  return data.data; // Extract data from ApiResponse
+  return data.data;
 }
 
 export async function createTask(userId, task) {
@@ -65,7 +86,7 @@ export async function createTask(userId, task) {
     }
   }
   const data = JSON.parse(errorText);
-  return data.data; // Extract data from ApiResponse
+  return data.data;
 }
 
 export async function deleteTask(taskId) {
@@ -75,7 +96,7 @@ export async function deleteTask(taskId) {
   });
   if (!response.ok) throw new Error("Failed to delete task");
   const data = await response.json();
-  return data.data; // Extract data from ApiResponse
+  return data.data;
 }
 
 export async function updateTask(taskId, task) {
@@ -86,10 +107,9 @@ export async function updateTask(taskId, task) {
   });
   if (!response.ok) throw new Error("Failed to update task");
   const data = await response.json();
-  return data.data; // Extract data from ApiResponse
+  return data.data;
 }
 
-// Add new API functions for profile and notifications
 export async function getProfile() {
   const response = await fetch("/api/profile", {
     headers: authHeaders(),
