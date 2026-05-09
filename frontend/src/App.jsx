@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
-import ProfilePage from "./pages/ProfilePage";
+import RegisterPage from "./features/authentication/pages/RegisterPage";
+import LoginPage from "./features/authentication/pages/LoginPage";
+import DashboardPage from "./features/dashboard/pages/DashboardPage";
+import ProfilePage from "./features/authentication/pages/ProfilePage";
 
 function App() {
   return (
